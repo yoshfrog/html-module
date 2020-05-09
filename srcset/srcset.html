@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+  <title>Document</title>
+</head>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+img { width: 100%; }
+picture { max-width: 1200px; margin: auto;}
+</style>
+<body>
+<h1>srcset</h1>
+<p>IE（pictureタグ不可）対策：picturefill.jsと併用</p>
+
+<h2>img</h2>
+<p>retina + srcset ○x</p>
+<!-- レスポンシブなし、PC/SP 同じ画像の時（実際にはあまりないので非実用的） -->
+<!-- ○x: 解像度 -->
+<img src="images/767.png"
+     srcset="images/767.png 1x,
+             images/767@2x.png 2x"
+     alt="">
+
+
+<p>非retina + responsive(sizes) + srcset ○○w</p>
+<!-- 画像の被写体は同じに画像サイズ（解像度による）のみ違う場合に利用 -->
+<!-- ○○w: ブラウザサイズ指定で読み込む画像を決める -->
+<!-- ○○w: chromeではキャッシュが強くリフレッシュしないと切り替わらないことがある -->
+<!-- sizes="（条件）画像表示サイズ, （条件）画像表示サイズ, 条件あてはまらないときの画像表示サイズ" -->
+<!-- sizes: cssにimgのサイズ記載があるとCSSが優先される -->
+<img src="images/1280.png"
+     srcset="images/1280.png 1280w,
+             images/959.png 959w,
+             images/767.png 767w"
+     sizes="(max-width: 767px) 50vw, (max-width: 959px) 75vw, 100vw"
+     alt="">
+
+
+<h2>picture</h2>
+<p>非retina + レスポンシブ(media) + srcset ○○w</p>
+<!-- 画像の被写体レイアウトが違う等、ブラウザサイズにより別画像を使用する場合に利用 -->
+<!-- ○○w: ブラウザサイズ指定で読み込む画像を決める -->
+<!-- ○○w: chromeではキャッシュが強くリフレッシュしないと切り替わらないことがある -->
+<picture>
+  <source media="(max-width:1000px)" srcset="images/767.png 767w, images/767@2x.png 1534w">
+  <img src="images/1280.png" srcset="images/1280.png 1280w, images/1280@2x.png 2560w" alt="">
+</picture>
+
+<p>retina + レスポンシブ(media) + srcset ○x</p>
+<!-- 画像の被写体レイアウトが違う等、ブラウザサイズにより別画像を使用する場合に利用 -->
+<!-- media: ブレイクポイント -->
+<!-- ○x: 解像度 -->
+<picture>
+  <source media="(max-width:767px)" srcset="images/767.png 1x, images/767@2x.png 2x">
+  <source media="(max-width:959px)" srcset="images/959.png 1x, images/959@2x.png 2x">
+  <img src="images/1280.png" srcset="images/1280.png 1x, images/1280@2x.png 2x" alt="">
+</picture>
+
+
+<h2>背景画像</h2>
+<p>background-image</p>
+<div class="bg"></div>
+
+<style>
+  .bg {
+    width:100%; height:300px;
+    background: url(images/1280.png) no-repeat top left / 100% 100%;
+  }
+  @media screen and (-webkit-min-device-pixel-ratio:2), (min-resolution: 2dppx){
+    .bg {
+      background-image: url(images/1280@2x.png);
+    }
+  }
+</style>
+
+<script src="https://cdn.rawgit.com/scottjehl/picturefill/3.0.2/dist/picturefill.min.js"></script>
+</body>
+</html>
